@@ -1,5 +1,7 @@
 package br.sp.senai.jandira.conversor_temperatura.gui;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.temporal.UnsupportedTemporalTypeException;
@@ -23,7 +25,7 @@ public class TelaConversor {
 	public void criarTela() {
 		
 		JFrame tela = new JFrame();
-		tela.setSize(500, 450);
+		tela.setSize(400, 400);
 		tela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tela.setTitle("Conversor de Temperatura");
 		tela.setLocationRelativeTo(null);
@@ -33,40 +35,34 @@ public class TelaConversor {
 		// Criando os label para o JFrame
 		// Celsius
 		labelCelsius = new JLabel();
-		labelCelsius.setText("Temperatura em graus Celsius: ");
-		labelCelsius.setBounds(50, 10, 300, 25);
+		labelCelsius.setText("Temperatura em graus celsius: ");
+		labelCelsius.setBounds(40, 8, 200, 25);
 		
 		textCelsius = new JTextField();
-		textCelsius.setBounds(50, 40, 400, 40);
+		textCelsius.setBounds(40, 40, 304, 32);
 		
 		// Resultado
 		labelResultado = new JLabel();
-		labelResultado.setText("Resultado:");
-		labelResultado.setBounds(50, 120, 190, 40);
-		
-		
+		labelResultado.setBounds(132, 120, 288, 80);
+		labelResultado.setFont(new Font("Arial", Font.BOLD, 20));
 		
 		// Mensagem de Erro
 		labelMensagemErro = new JLabel();
-		
+		labelMensagemErro.setBounds(120, 144, 288, 80);
+		labelMensagemErro.setForeground(Color.RED);
+		labelMensagemErro.setFont(new Font("Arial", Font.BOLD, 16));
 		
 		
 		// Criando botão Kelvin
 		buttonKelvin = new JButton();
 		buttonKelvin.setText("Kelvin");
-		buttonKelvin.setBounds(50, 90, 190, 40);
+		buttonKelvin.setBounds(40, 95, 144, 32);
 		
 		// Criando botão Fahreinheit
 		buttonFahreinheit = new JButton();
 		buttonFahreinheit.setText("Fahreinheit");
-		buttonFahreinheit.setBounds(259, 90, 190, 40);
+		buttonFahreinheit.setBounds(200, 95, 144, 32);
 		
-		tela.getContentPane().add(labelCelsius);
-		tela.getContentPane().add(textCelsius);
-		tela.getContentPane().add(labelResultado);
-		
-		tela.getContentPane().add(buttonKelvin);
-		tela.getContentPane().add(buttonFahreinheit);
 		
 		buttonKelvin.addActionListener(new ActionListener() {
 			
@@ -75,16 +71,21 @@ public class TelaConversor {
 			
 				String celsius = textCelsius.getText();
 				
-				// Casting
-				double celsiusDouble = Double.parseDouble(celsius);
-				
-				Temperatura kelvin = new Temperatura();
-				kelvin.setCelsius(celsiusDouble);
-				
-				Double kelvinDouble = kelvin.converterParaKelvin();
-				
-				// Atribuir valor para o labelResultado
-				labelResultado.setText(String.valueOf("Resultado: " + kelvinDouble));
+				try {
+					
+					double celsiusDouble = Double.parseDouble(celsius);
+					Temperatura kelvin = new Temperatura();
+					
+					kelvin.setCelsius(celsiusDouble);
+					Double kelvinDouble = kelvin.converterParaKelvin();
+					
+					String numeroFormatado = String.format("%.1f", kelvinDouble);
+					labelResultado.setText(String.valueOf(numeroFormatado + " KELVIN"));
+			
+				} catch (Exception e2) {
+					
+					labelMensagemErro.setText("Insira um valor válido!");
+				}
 				
 			}
 		});
@@ -96,19 +97,32 @@ public class TelaConversor {
 				
 				String celsius = textCelsius.getText();
 				
-				// Casting
-				double celsiusDouble = Double.parseDouble(celsius);
+				try {
+					
+					double celsiusDouble = Double.parseDouble(celsius);
+					Temperatura fahreinheint = new Temperatura();
+					fahreinheint.setCelsius(celsiusDouble);
+					
+					Double fahreinheintDouble = fahreinheint.converterParaFahrenheit();
+					
+					String numeroFormatado = String.format("%.1f", fahreinheintDouble);
+					labelResultado.setText(String.valueOf(numeroFormatado + " FAHREINHEIT"));
+					
+				} catch (Exception e2) {
+					
+					labelMensagemErro.setText("Insira um valor válido!");
+				}
 				
-				Temperatura fahreinheint = new Temperatura();
-				fahreinheint.setCelsius(celsiusDouble);
-				
-				Double fahreinheintDouble = fahreinheint.converterParaFahrenheit();
-				
-				// Atribuir valor para labelResultado
-				labelResultado.setText(String.valueOf("Resultado: " + fahreinheintDouble));
 				
 			}
 		});
+		
+		tela.getContentPane().add(labelCelsius);
+		tela.getContentPane().add(textCelsius);
+		tela.getContentPane().add(labelResultado);
+		tela.getContentPane().add(labelMensagemErro);
+		tela.getContentPane().add(buttonKelvin);
+		tela.getContentPane().add(buttonFahreinheit);
 		
 		tela.setVisible(true);
 	}
